@@ -51,17 +51,21 @@ class ViegaFonterraSensor(SensorEntity):
         self._attr_native_unit_of_measurement = unit
         self._attr_native_value = None
 
-    async def _ensure_connected(self):
+    async def _ensure_connected(self) -> None:
+        """Connect to the controller or raise a clear connection error."""
         if self._client is None:
             self._client = AsyncModbusTcpClient(self._host, port=self._port)
-        if not self._client.connected:
-            await self._client.connect()
+        if not self._client.connected and not await self._client.connect():
+            raise ConnectionError(f"Cannot connect to {self._host}:{self._port}")
 
     async def async_update(self):
         try:
             await self._ensure_connected()
-            result = await self._client.read_input_registers(self._register, 1, slave=1)
+            result = await self._client.read_input_registers(self._register, count=1, slave=1)
             if result and not result.isError():
                 self._attr_native_value = round(result.registers[0] * self._factor, 1)
-        except ModbusException as e:
-            _LOGGER.error("Error reading sensor register %d: %s", self._register, e)
+        except (ConnectionError, ModbusException, OSError) as err:
+            self._attr_available = False
+            _LOGGER.warning("Error reading sensor register %d: %s", self._register, err)
+        else:
+            self._attr_available = True

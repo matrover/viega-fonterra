@@ -2,21 +2,16 @@
 from datetime import timedelta
 import logging
 
-from homeassistant.components.climate import (
-    ClimateEntity,
-    ClimateEntityFeature,
-    HVACMode,
-)
+from homeassistant.components.climate import ClimateEntity, ClimateEntityFeature, HVACMode
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
 
-from .const import DOMAIN, REGISTER_CURRENT_TEMP_BASE, REGISTER_SETPOINT_BASE
+from .const import REGISTER_CURRENT_TEMP_BASE, REGISTER_SETPOINT_BASE
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -36,7 +31,6 @@ async def async_setup_entry(
 
     entities = []
     for zone in zones:
-        client = AsyncModbusTcpClient(host, port=port)
         entities.append(
             ViegaFonterraClimate(
                 host=host,
@@ -53,12 +47,8 @@ async def async_setup_entry(
 class ViegaFonterraClimate(ClimateEntity):
     """Representation of a Viega Fonterra zone."""
 
-    _attr_supported_features = (
-        ClimateEntityFeature.TARGET_TEMPERATURE
-        | ClimateEntityFeature.TURN_ON
-        | ClimateEntityFeature.TURN_OFF
-    )
-    _attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
+    _attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE
+    _attr_hvac_modes = [HVACMode.HEAT]
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_target_temperature_step = 0.5
     _attr_min_temp = 5.0
@@ -77,11 +67,12 @@ class ViegaFonterraClimate(ClimateEntity):
         self._target_temperature = 20.0
         self._hvac_mode = HVACMode.HEAT
 
-    async def _ensure_connected(self):
+    async def _ensure_connected(self) -> None:
+        """Connect to the controller or raise a clear connection error."""
         if self._client is None:
             self._client = AsyncModbusTcpClient(self._host, port=self._port)
-        if not self._client.connected:
-            await self._client.connect()
+        if not self._client.connected and not await self._client.connect():
+            raise ConnectionError(f"Cannot connect to {self._host}:{self._port}")
 
     @property
     def current_temperature(self):
@@ -102,8 +93,8 @@ class ViegaFonterraClimate(ClimateEntity):
                 await self._ensure_connected()
                 await self._client.write_register(self._setpoint_register, int(temp * 10), slave=1)
                 self._target_temperature = temp
-            except ModbusException as e:
-                _LOGGER.error("Error writing setpoint for zone %d: %s", self._zone_id, e)
+            except (ConnectionError, ModbusException, OSError) as err:
+                _LOGGER.error("Error writing setpoint for zone %d: %s", self._zone_id, err)
 
     async def async_set_hvac_mode(self, hvac_mode):
         self._hvac_mode = hvac_mode
@@ -111,12 +102,15 @@ class ViegaFonterraClimate(ClimateEntity):
     async def async_update(self):
         try:
             await self._ensure_connected()
-            result = await self._client.read_input_registers(self._current_temp_register, 1, slave=1)
+            result = await self._client.read_input_registers(self._current_temp_register, count=1, slave=1)
             if result and not result.isError():
                 self._current_temperature = result.registers[0] / 10.0
 
-            result = await self._client.read_holding_registers(self._setpoint_register, 1, slave=1)
+            result = await self._client.read_holding_registers(self._setpoint_register, count=1, slave=1)
             if result and not result.isError():
                 self._target_temperature = result.registers[0] / 10.0
-        except ModbusException as e:
-            _LOGGER.error("Error reading zone %d: %s", self._zone_id, e)
+        except (ConnectionError, ModbusException, OSError) as err:
+            self._attr_available = False
+            _LOGGER.warning("Error reading zone %d: %s", self._zone_id, err)
+        else:
+            self._attr_available = True
