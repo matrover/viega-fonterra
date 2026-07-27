@@ -2,12 +2,13 @@
   "domain": "viega_fonterra",
   "name": "Viega Fonterra Smart Control",
   "codeowners": ["@MarijnRoverts"],
-  "config_flow": false,
-  "documentation": "https://github.com/MarijnRoverts/viega-fonterra",
+  "config_flow": true,
+  "documentation": "https://github.com/matrover/viega-fonterra",
   "integration_type": "hub",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/MarijnRoverts/viega-fonterra/issues",
+  "issue_tracker": "https://github.com/matrover/viega-fonterra/issues",
   "loggers": ["viega_fonterra"],
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.0.1",
+  "icon": "mdi:floor-plan"
 }

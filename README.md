@@ -22,10 +22,10 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 
 ## Installation
 
-Click the **"Add to Home Assistant"** button above or add this repository manually in HACS:
+Click the **Add to Home Assistant** button above or add this repository manually in HACS:
 
-- Repository: `matrover/viega-fonterra`
-- Category: `Integration`
+- **Repository**: `matrover/viega-fonterra`
+- **Category**: `Integration`
 
 After installation, go to **Settings → Devices & Services → Add Integration** and search for **Viega Fonterra**.
 
