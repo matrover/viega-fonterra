@@ -1,7 +1,10 @@
 # Viega Fonterra Smart Control
 
-[Add to Home Assistant](https://my.home-assistant.io/redirect/hacsrepo/?owner=matrover&repository=viega-fonterra&category=integration)
-[HACS](https://hacs.xyz/docs/panel/custom_repositories)
+<p align="left">
+  <a href="https://my.home-assistant.io/redirect/hacsrepo/?owner=matrover&repository=viega-fonterra&category=integration">
+    <img src="https://my.home-assistant.io/badges/hacs.svg" alt="Add to Home Assistant" height="50" />
+  </a>
+</p>
 
 **Home Assistant custom integration for Viega Fonterra Smart Control floor heating via Modbus TCP.**
 
@@ -22,21 +25,23 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 
 ## Important Viega Device Configuration
 
-Before adding the integration in Home Assistant, you **must** configure the Viega Fonterra Smart Control device itself:
+**Before adding the integration you must configure the Viega device itself:**
 
 1. Activate Modbus TCP in the Viega app or web interface of the WiFi module.
 2. Assign a **static IP address** to the WiFi module in your router (very important for stable connection).
 
-See the community thread for screenshots of the Viega configuration screens.
+See the community thread for screenshots of the Viega configuration screens (including the image below).
 
 **Viega Manual (register map on page 105+):**  
-[ga_fonterra-smart-control_7_de_de.pdf](https://web-catalog.viega.com/de_DE/html/Montage/Flaechentemperierung/Fonterra/1a86c459c36246e4ac114094093e2e46_7_de_DE/pdf/ga_fonterra-smart-control_7_de_de.pdf)
+[Download PDF](https://web-catalog.viega.com/de_DE/html/Montage/Flaechentemperierung/Fonterra/1a86c459c36246e4ac114094093e2e46_7_de_DE/pdf/ga_fonterra-smart-control_7_de_de.pdf)
+
+![Viega Configuration Screenshot](https://community-assets.home-assistant.io/original/3X/6/a/6ab2d81d0e45a95b4f91d3bb624c0d03ba838749.png)
 
 ---
 
 ## Installation
 
-Click the **Add to Home Assistant** button above or add this repository manually in HACS:
+Click the button at the top of this page or add this repository manually in HACS:
 
 - **Repository**: `matrover/viega-fonterra`
 - **Category**: `Integration`
@@ -45,7 +50,7 @@ After installation, go to **Settings → Devices & Services → Add Integration*
 
 ---
 
-## Configuration (UI)
+## Configuration
 
 The integration is configured through the UI. You will be asked for:
 - Modbus Host (IP address of the Fonterra WiFi module)
@@ -56,7 +61,7 @@ The integration is configured through the UI. You will be asked for:
 
 ---
 
-## Register Map (summary from community + manual)
+## Register Map (summary)
 
 | Register | Type   | Description                  | Scaling |
 |----------|--------|------------------------------|---------|
