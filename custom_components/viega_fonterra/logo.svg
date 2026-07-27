@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3a4a"/>
+      <stop offset="100%" style="stop-color:#0d2130"/>
+    </linearGradient>
+    <linearGradient id="heat" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35"/>
+      <stop offset="100%" style="stop-color:#5bbcd6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="256" height="256" rx="40" fill="url(#bg)"/>
+  
+  <!-- Floor surface -->
+  <rect x="30" y="145" width="196" height="10" rx="3" fill="#5bbcd6" opacity="0.8"/>
+  
+  <!-- Heating coils/pipes -->
+  <path d="M35 170 Q65 145 95 170 Q125 195 155 170 Q185 145 215 170" 
+        stroke="url(#heat)" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M35 195 Q65 170 95 195 Q125 220 155 195 Q185 170 215 195" 
+        stroke="url(#heat)" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.6"/>
+  
+  <!-- Thermostat dial -->
+  <circle cx="128" cy="65" r="28" stroke="#fff" stroke-width="3.5" fill="none"/>
+  <circle cx="128" cy="65" r="22" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.4"/>
+  
+  <!-- Thermometer stem -->
+  <rect x="122" y="65" width="12" height="42" rx="4" fill="#ff6b35"/>
+  <circle cx="128" cy="103" r="8" fill="#ff6b35"/>
+  
+  <!-- Temperature display -->
+  <text x="128" y="63" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#fff" font-weight="bold">22°</text>
+  
+  <!-- VIEGA text at bottom -->
+  <text x="128" y="238" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="20" fill="#fff" font-weight="bold" opacity="0.9">VIEGA</text>
+</svg>

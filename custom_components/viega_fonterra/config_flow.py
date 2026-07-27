@@ -30,7 +30,7 @@ class ViegaFonterraConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             }
 
             return self.async_create_entry(
-                title="Viega Fonterra Smart Control",
+                title="Home Assistant Viega Fonterra",
                 data=data,
             )
 

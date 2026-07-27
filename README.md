@@ -1,4 +1,8 @@
-# Viega Fonterra Smart Control
+# Home Assistant Viega Fonterra
+
+<p align="center">
+  <img src="icon.svg" alt="Home Assistant Viega Fonterra" width="128" height="128" />
+</p>
 
 <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=matrover&repository=viega-fonterra&category=integration">
   <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and add this repository." height="50" />
@@ -18,6 +22,7 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 - Full Modbus register mapping based on Viega manual and community contributions
 - Configurable via the UI (Config Flow)
 - Robust error handling and automatic reconnection
+- Uses `pymodbus` for direct Modbus TCP communication
 
 ---
 
@@ -28,7 +33,7 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 1. Activate Modbus TCP in the Viega app or web interface of the WiFi module.
 2. Assign a **static IP address** to the WiFi module in your router (very important for stable connection).
 
-See the community thread for screenshots of the Viega configuration screens (including the image below).
+See the community thread for screenshots of the Viega configuration screens.
 
 **Viega Manual (register map on page 105+):**  
 [Download PDF](https://web-catalog.viega.com/de_DE/html/Montage/Flaechentemperierung/Fonterra/1a86c459c36246e4ac114094093e2e46_7_de_DE/pdf/ga_fonterra-smart-control_7_de_de.pdf)
@@ -44,7 +49,7 @@ Click the button at the top of this page or add this repository manually in HACS
 - **Repository**: `matrover/viega-fonterra`
 - **Category**: `Integration`
 
-After installation, go to **Settings → Devices & Services → Add Integration** and search for **Viega Fonterra**.
+After installation, go to **Settings → Devices & Services → Add Integration** and search for **Home Assistant Viega Fonterra**.
 
 ---
 
@@ -53,7 +58,7 @@ After installation, go to **Settings → Devices & Services → Add Integration*
 The integration is configured through the UI. You will be asked for:
 - Modbus Host (IP address of the Fonterra WiFi module)
 - Port (default 502)
-- Your heating zones
+- Your heating zones (one per line)
 
 **Important note from the community:** For correct current temperature reading, make sure to use `current_temp_register_type: input` (this was the solution for the common -9.9°C error).
 
