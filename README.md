@@ -1,8 +1,7 @@
 # Viega Fonterra Smart Control
 
-<a href="https://my.home-assistant.io/redirect/hacsrepo/?owner=matrover&repository=viega-fonterra&category=integration">
-  <img src="https://my.home-assistant.io/badges/hacs.svg" alt="Add to Home Assistant" />
-</a>
+[Add to Home Assistant](https://my.home-assistant.io/redirect/hacsrepo/?owner=matrover&repository=viega-fonterra&category=integration)
+[HACS](https://hacs.xyz/docs/panel/custom_repositories)
 
 **Home Assistant custom integration for Viega Fonterra Smart Control floor heating via Modbus TCP.**
 
@@ -23,7 +22,7 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 
 ## Installation
 
-Click the button above or add this repository manually in HACS:
+Click the **Add to Home Assistant** button above or add this repository manually in HACS:
 
 - **Repository**: `matrover/viega-fonterra`
 - **Category**: `Integration`
@@ -56,7 +55,6 @@ Full mapping is implemented in the code (`climate.py` and `sensor.py`).
 
 ## Support
 
-Created for **Marijn Roverts**.  
 Report issues on [GitHub Issues](https://github.com/matrover/viega-fonterra/issues).
 
 This integration has **not yet been tested on live hardware** — testing feedback is very welcome.
