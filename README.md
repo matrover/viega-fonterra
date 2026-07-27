@@ -17,7 +17,8 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 - Additional sensors (outdoor temperature, pump status, error codes, etc.)
 - Full Modbus register mapping based on Viega manual and community contributions
 - Robust error handling and automatic reconnection
-- HACS compatible with branding and documentation
+- Configurable via the UI (Config Flow)
+- HACS compatible
 
 ---
 
@@ -28,7 +29,7 @@ https://community.home-assistant.io/t/viega-floorheating-fonterra-smart-control/
 1. Go to **HACS** → **Integrations**
 2. Click the three dots in the top right → **Custom repositories**
 3. Add the following:
-   - **Repository**: `MarijnRoverts/viega-fonterra`
+   - **Repository**: `matrover/viega-fonterra`
    - **Category**: `Integration`
 4. Click **Add**
 5. Search for **"Viega Fonterra"** and install it
@@ -40,27 +41,11 @@ Copy the `custom_components/viega_fonterra` folder to your Home Assistant `confi
 
 ---
 
-## Configuration (`configuration.yaml`)
+## Configuration
 
-```yaml
-modbus:
-  - name: fonterra
-    type: tcp
-    host: 192.168.1.50          # IP address of the Fonterra WiFi module
-    port: 502
-    delay: 0.1
+After installation, go to **Settings → Devices & Services → Add Integration** and search for **Viega Fonterra**.
 
-viega_fonterra:
-  modbus_hub: fonterra
-  zones:
-    - name: "Living Room"
-      zone_id: 1
-    - name: "Bedroom"
-      zone_id: 2
-    - name: "Bathroom"
-      zone_id: 3
-    # Add all your zones here
-```
+You can configure the Modbus host, port and your heating zones through the UI.
 
 ---
 
@@ -73,19 +58,20 @@ viega_fonterra:
 | 100      | Input  | Outdoor temperature          | ×0.1    |
 | 200+     | Holding| Pump status, errors, etc.    | -       |
 
-Full mapping is implemented in `climate.py` and `sensor.py`.
+Full mapping is implemented in the code.
 
 ---
 
-## Support & Contributing
+## Support
 
-- Created for **Marijn Roverts**
-- Report issues or improvements on [GitHub Issues](https://github.com/MarijnRoverts/viega-fonterra/issues)
-- This integration has not yet been tested on live hardware — testing feedback is very welcome.
+Created for **Marijn Roverts**.  
+Report issues on [GitHub Issues](https://github.com/matrover/viega-fonterra/issues).
+
+This integration has not yet been tested on live hardware — testing feedback is welcome.
 
 ---
 
-**Thank you to all contributors in the original community thread!**
+**Quick links:**
 
 [Open your Home Assistant instance and show the integrations](https://my.home-assistant.io/redirect/integrations)
 
