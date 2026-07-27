@@ -1,0 +1,8 @@
+{
+  "name": "Viega Fonterra Smart Control",
+  "content_in_root": false,
+  "hide_default_branch": true,
+  "homeassistant": "2023.8.0",
+  "zip_release": true,
+  "filename": "viega-fonterra.zip"
+}

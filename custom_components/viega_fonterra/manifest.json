@@ -9,6 +9,6 @@
   "issue_tracker": "https://github.com/matrover/viega-fonterra/issues",
   "loggers": ["viega_fonterra"],
   "requirements": [],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "icon": "mdi:floor-plan"
 }
