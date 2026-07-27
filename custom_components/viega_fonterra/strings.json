@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Viega Fonterra Smart Control",
+        "description": "Configure the Modbus connection and zones.",
+        "data": {
+          "host": "Modbus Host (IP address)",
+          "port": "Modbus Port",
+          "zones": "Zones (select multiple)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to Modbus device"
+    },
+    "abort": {
+      "already_configured": "This device is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Viega Fonterra Options",
+        "data": {
+          "zones": "Zones configuration (JSON)"
+        }
+      }
+    }
+  }
+}
