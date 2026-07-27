@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Home Assistant Viega Fonterra",
+        "title": "Viega Fonterra",
         "description": "Connect to your Viega Fonterra Smart Control via Modbus TCP.",
         "data": {
           "host": "Modbus Host (IP address)",
@@ -21,7 +21,7 @@
   "options": {
     "step": {
       "init": {
-        "title": "Home Assistant Viega Fonterra Options",
+        "title": "Viega Fonterra Options",
         "data": {
           "zones": "Zone names (one per line)"
         }

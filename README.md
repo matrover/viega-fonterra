@@ -1,7 +1,7 @@
-# Home Assistant Viega Fonterra
+# Viega Fonterra Smart Control
 
 <p align="center">
-  <img src="icon.svg" alt="Home Assistant Viega Fonterra" width="128" height="128" />
+  <img src="icon.svg" alt="Viega Fonterra Smart Control" width="128" height="128" />
 </p>
 
 <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=matrover&repository=viega-fonterra&category=integration">
@@ -49,7 +49,7 @@ Click the button at the top of this page or add this repository manually in HACS
 - **Repository**: `matrover/viega-fonterra`
 - **Category**: `Integration`
 
-After installation, go to **Settings → Devices & Services → Add Integration** and search for **Home Assistant Viega Fonterra**.
+After installation, go to **Settings → Devices & Services → Add Integration** and search for **Viega Fonterra Smart Control**.
 
 ---
 
