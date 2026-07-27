@@ -1,14 +1,13 @@
 {
   "domain": "viega_fonterra",
   "name": "Viega Fonterra Smart Control",
-  "codeowners": ["@MarijnRoverts"],
+  "codeowners": ["@matrover"],
   "config_flow": true,
+  "dependencies": [],
   "documentation": "https://github.com/matrover/viega-fonterra",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/matrover/viega-fonterra/issues",
-  "loggers": ["viega_fonterra"],
-  "requirements": [],
-  "version": "1.0.2",
-  "icon": "mdi:floor-plan"
+  "requirements": ["pymodbus>=3.6.0"],
+  "version": "1.0.3"
 }

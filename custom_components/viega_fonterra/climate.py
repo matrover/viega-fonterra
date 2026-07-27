@@ -1,12 +1,27 @@
 """Climate platform for Viega Fonterra."""
-from homeassistant.components.climate import ClimateEntity, HVACMode, ClimateEntityFeature
-from homeassistant.components.modbus import ModbusHub
+from datetime import timedelta
+import logging
+
+from homeassistant.components.climate import (
+    ClimateEntity,
+    ClimateEntityFeature,
+    HVACMode,
+)
 from homeassistant.const import ATTR_TEMPERATURE, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+
+from pymodbus.client import AsyncModbusTcpClient
+from pymodbus.exceptions import ModbusException
 
 from .const import DOMAIN, REGISTER_CURRENT_TEMP_BASE, REGISTER_SETPOINT_BASE
+
+_LOGGER = logging.getLogger(__name__)
+
+SCAN_INTERVAL = timedelta(seconds=30)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -14,21 +29,25 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Viega Fonterra climate entities."""
-    modbus_hub = hass.data["modbus"][config_entry.data["modbus_hub"]]
-    zones = config_entry.data.get("zones", [])
+    data = config_entry.data
+    host = data["host"]
+    port = data.get("port", 502)
+    zones = data.get("zones", [])
 
     entities = []
     for zone in zones:
+        client = AsyncModbusTcpClient(host, port=port)
         entities.append(
             ViegaFonterraClimate(
-                modbus_hub=modbus_hub,
+                host=host,
+                port=port,
                 name=zone["name"],
                 zone_id=zone["zone_id"],
                 unique_id=f"viega_fonterra_climate_{zone['zone_id']}",
             )
         )
 
-    async_add_entities(entities)
+    async_add_entities(entities, update_before_add=True)
 
 
 class ViegaFonterraClimate(ClimateEntity):
@@ -45,8 +64,10 @@ class ViegaFonterraClimate(ClimateEntity):
     _attr_min_temp = 5.0
     _attr_max_temp = 30.0
 
-    def __init__(self, modbus_hub: ModbusHub, name: str, zone_id: int, unique_id: str):
-        self._modbus = modbus_hub
+    def __init__(self, host: str, port: int, name: str, zone_id: int, unique_id: str):
+        self._host = host
+        self._port = port
+        self._client = None
         self._attr_name = f"Viega Fonterra {name}"
         self._zone_id = zone_id
         self._attr_unique_id = unique_id
@@ -55,6 +76,12 @@ class ViegaFonterraClimate(ClimateEntity):
         self._current_temperature = None
         self._target_temperature = 20.0
         self._hvac_mode = HVACMode.HEAT
+
+    async def _ensure_connected(self):
+        if self._client is None:
+            self._client = AsyncModbusTcpClient(self._host, port=self._port)
+        if not self._client.connected:
+            await self._client.connect()
 
     @property
     def current_temperature(self):
@@ -71,28 +98,25 @@ class ViegaFonterraClimate(ClimateEntity):
     async def async_set_temperature(self, **kwargs):
         temp = kwargs.get(ATTR_TEMPERATURE)
         if temp is not None:
-            # Write to Modbus (scaled by 10)
-            await self._modbus.async_write_register(self._setpoint_register, int(temp * 10))
-            self._target_temperature = temp
+            try:
+                await self._ensure_connected()
+                await self._client.write_register(self._setpoint_register, int(temp * 10), slave=1)
+                self._target_temperature = temp
+            except ModbusException as e:
+                _LOGGER.error("Error writing setpoint for zone %d: %s", self._zone_id, e)
 
     async def async_set_hvac_mode(self, hvac_mode):
         self._hvac_mode = hvac_mode
-        # In real implementation you would write a mode register here
 
     async def async_update(self):
         try:
-            # Read current temperature
-            result = await self._modbus.async_read_input_registers(
-                self._current_temp_register, 1
-            )
-            if result:
-                self._current_temperature = result[0] / 10.0
+            await self._ensure_connected()
+            result = await self._client.read_input_registers(self._current_temp_register, 1, slave=1)
+            if result and not result.isError():
+                self._current_temperature = result.registers[0] / 10.0
 
-            # Read setpoint
-            result = await self._modbus.async_read_holding_registers(
-                self._setpoint_register, 1
-            )
-            if result:
-                self._target_temperature = result[0] / 10.0
-        except Exception:
-            self._current_temperature = None
+            result = await self._client.read_holding_registers(self._setpoint_register, 1, slave=1)
+            if result and not result.isError():
+                self._target_temperature = result.registers[0] / 10.0
+        except ModbusException as e:
+            _LOGGER.error("Error reading zone %d: %s", self._zone_id, e)

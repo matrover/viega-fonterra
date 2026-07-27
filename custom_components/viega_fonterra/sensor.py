@@ -1,21 +1,32 @@
 """Sensor platform for Viega Fonterra."""
+import logging
+
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.config_entries import ConfigEntry
 
+from pymodbus.client import AsyncModbusTcpClient
+from pymodbus.exceptions import ModbusException
+
 from .const import DOMAIN, REGISTER_OUTDOOR_TEMP
+
+_LOGGER = logging.getLogger(__name__)
+
 
 async def async_setup_entry(
     hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Set up Viega Fonterra sensor entities."""
-    modbus_hub = hass.data["modbus"][config_entry.data["modbus_hub"]]
+    data = config_entry.data
+    host = data["host"]
+    port = data.get("port", 502)
 
     entities = [
         ViegaFonterraSensor(
-            modbus_hub=modbus_hub,
-            name="Buiten Temperatuur",
+            host=host,
+            port=port,
+            name="Outdoor Temperature",
             register=REGISTER_OUTDOOR_TEMP,
             unit="°C",
             factor=0.1,
@@ -23,14 +34,16 @@ async def async_setup_entry(
         )
     ]
 
-    async_add_entities(entities)
+    async_add_entities(entities, update_before_add=True)
 
 
 class ViegaFonterraSensor(SensorEntity):
-    """Generic Viega Fonterra sensor."""
+    """Representation of a Viega Fonterra sensor."""
 
-    def __init__(self, modbus_hub, name, register, unit, factor, unique_id):
-        self._modbus = modbus_hub
+    def __init__(self, host: str, port: int, name: str, register: int, unit: str, factor: float, unique_id: str):
+        self._host = host
+        self._port = port
+        self._client = None
         self._attr_name = f"Viega Fonterra {name}"
         self._register = register
         self._factor = factor
@@ -38,10 +51,17 @@ class ViegaFonterraSensor(SensorEntity):
         self._attr_native_unit_of_measurement = unit
         self._attr_native_value = None
 
+    async def _ensure_connected(self):
+        if self._client is None:
+            self._client = AsyncModbusTcpClient(self._host, port=self._port)
+        if not self._client.connected:
+            await self._client.connect()
+
     async def async_update(self):
         try:
-            result = await self._modbus.async_read_input_registers(self._register, 1)
-            if result:
-                self._attr_native_value = round(result[0] * self._factor, 1)
-        except Exception:
-            self._attr_native_value = None
+            await self._ensure_connected()
+            result = await self._client.read_input_registers(self._register, 1, slave=1)
+            if result and not result.isError():
+                self._attr_native_value = round(result.registers[0] * self._factor, 1)
+        except ModbusException as e:
+            _LOGGER.error("Error reading sensor register %d: %s", self._register, e)

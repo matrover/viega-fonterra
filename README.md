@@ -1,10 +1,8 @@
 # Viega Fonterra Smart Control
 
-<p align="left">
-  <a href="https://my.home-assistant.io/redirect/hacsrepo/?owner=matrover&repository=viega-fonterra&category=integration">
-    <img src="https://my.home-assistant.io/badges/hacs.svg" alt="Add to Home Assistant" height="50" />
-  </a>
-</p>
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=matrover&repository=viega-fonterra&category=integration">
+  <img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and add this repository." height="50" />
+</a>
 
 **Home Assistant custom integration for Viega Fonterra Smart Control floor heating via Modbus TCP.**
 

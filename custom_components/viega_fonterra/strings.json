@@ -3,11 +3,11 @@
     "step": {
       "user": {
         "title": "Viega Fonterra Smart Control",
-        "description": "Configure the Modbus connection and zones.",
+        "description": "Connect to your Viega Fonterra Smart Control via Modbus TCP.",
         "data": {
           "host": "Modbus Host (IP address)",
           "port": "Modbus Port",
-          "zones": "Zones (select multiple)"
+          "zones": "Zone names (one per line)"
         }
       }
     },
@@ -23,7 +23,7 @@
       "init": {
         "title": "Viega Fonterra Options",
         "data": {
-          "zones": "Zones configuration (JSON)"
+          "zones": "Zone names (one per line)"
         }
       }
     }
